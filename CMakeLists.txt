@@ -16,7 +16,7 @@ set(SOURCE_FILES
         src/Client.cpp
         src/Client.h
         src/Station.cpp
-        src/Station.h)
+        src/Station.h src/mutex.h src/place.h)
 
 set(EXECUTABLE_OUTPUT_PATH ${dir} CACHE PATH "Build directory" FORCE)
 set(LIBRARY_OUTPUT_PATH ${dir} CACHE PATH "Build directory" FORCE)
