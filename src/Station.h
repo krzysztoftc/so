@@ -24,6 +24,7 @@ class Station {
     mutable pthread_mutex_t mutex_queues = PTHREAD_MUTEX_INITIALIZER;
     mutable pthread_mutex_t mutex_refresh = PTHREAD_MUTEX_INITIALIZER;
 
+
     int rows;
     int cols;
 
@@ -36,9 +37,9 @@ class Station {
     static void* thread_cistern(void *arg);
 
 public:
-    static int pump1;
-    static int pump2;
-    static int pump3;
+    static int pump[3] = {0,0,0};
+
+    static pthread_mutex_t mutex_distr[3] = {PTHREAD_MUTEX_INITIALIZER};
 
     Station();
     void new_client();

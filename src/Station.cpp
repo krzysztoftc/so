@@ -6,9 +6,6 @@
 
 using namespace std;
 
-int Station::pump1 = 0;
-int Station::pump2 = 0;
-int Station::pump3 = 0;
 
 Station::Station() {
 
@@ -19,61 +16,39 @@ Station::Station() {
     int status = pthread_create(&th_new_clients, NULL, Station::thread_new_clients, (void*)this);
     //if (status != 0) printw("error\n");
     status = pthread_create(&th_refresh, NULL,  Station::thread_refresh, (void*)this);
-    if (status != 0) printw("error\n");
+//    if (status != 0) printw("error\n");
     //mvprintw(2,2,"started");
     //status = pthread_create(&th_cistern, NULL,  Station::thread_cistern, (void*)this);
-    if (status != 0) mvprintw(2,2,"error");
-    //mvprintw(3,0,"started");
-    //refresh();
-    //pthread_mutex_unlock(&mutex_refresh);
+//    if (status != 0) mvprintw(2,2,"error");
+
 }
 
 void Station::new_client() {
 
-    pthread_mutex_lock(&mutex_queues);
-    /*
-    unsigned pump1_queue = pump1.size();
-    unsigned pump2_queue = pump2.size();
-    unsigned pump3_queue = pump3.size();
+   pthread_mutex_lock(&mutex_queues);
 
-    if (pump1_queue <= pump2_queue && pump1_queue < pump3_queue) {
-        pump1.push_back(new Client(1 + rand() % 6, 30 + rand() % 50, distr1));
+    if (pump[0] <= pump[1] && pump[0] < pump[1]) {
+        pump[0]++;
+        clients.push_back(new Client(1 + rand() % 6, 30 + rand() % 50, distr1, this));
     }
 
-    else if (pump2_queue <= pump3_queue && pump2_queue < pump1_queue) {
-        pump2.push_back(new Client(1 + rand() % 6, 30 + rand() % 50, distr2));
-    }
-
-    else {
-        pump3.push_back(new Client(1 + rand() % 6, 30 + rand() % 50, distr3));
-    }*/
-
-
-    if (pump1 <= pump2 && pump1 < pump3) {
-        pump1++;
-        clients.push_back(new Client(1 + rand() % 6, 30 + rand() % 50, distr1));
-    }
-
-    else if (pump2 <= pump3 && pump2 < pump1) {
-        pump2++;
-        clients.push_back(new Client(1 + rand() % 6, 30 + rand() % 50, distr2));
+    else if (pump[1] <= pump[2] && pump[1] < pump[0]) {
+        pump[1]++;
+        clients.push_back(new Client(1 + rand() % 6, 30 + rand() % 50, distr2, this));
     }
 
     else {
-        pump3++;
-        clients.push_back(new Client(1 + rand() % 6, 30 + rand() % 50, distr3));
+        pump[2]++;
+        clients.push_back(new Client(1 + rand() % 6, 30 + rand() % 50, distr3, this));
     }
     pthread_mutex_unlock(&mutex_queues);
 
-    //mvprintw(0,0,"New client: %d pump %d", Client::cnt++, clients.back()->position);
-//    refresh();
-//    pthread_mutex_unlock(&mutex_refresh);
 
 }
 
 void Station::refresh_view() {
-//    pthread_mutex_lock(&mutex_refresh);
     getmaxyx(stdscr,rows,cols);
+    clear();
     start_color();
 
     init_pair(1,COLOR_WHITE, COLOR_RED);
@@ -98,8 +73,8 @@ void Station::refresh_view() {
     int p[3];
     p[0]=p[1]=p[2] = 0;
 
-    /*while(clients.front()->position == none)
-        clients.pop_front();*/
+//    while(clients.front()->position == none)
+//        clients.pop_front();
 
     for(Client * client : clients){
 
@@ -117,15 +92,17 @@ void Station::refresh_view() {
 
     attron(COLOR_PAIR(7));
     refresh();
-//    pthread_mutex_unlock(&mutex_refresh);
 }
 
 void* Station::thread_new_clients(void *obj) {
+    //int i = 2;
     while (1) {
-    ((Station *) obj)->new_client();
+        ((Station *) obj)->new_client();
 
-    usleep(600000);
+    //getch();
+        usleep(900000);
     }
+    exit(0);
 }
 
 void* Station::thread_cistern(void *obj) {

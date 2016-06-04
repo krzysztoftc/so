@@ -11,6 +11,7 @@
 
 #include "mutex.h"
 #include "place.h"
+#include "Station.h"
 
 //pthread_mutex_t mutex_distr1 = PTHREAD_MUTEX_INITIALIZER;
 //pthread_mutex_t mutex_distr2 = PTHREAD_MUTEX_INITIALIZER;
@@ -18,10 +19,6 @@
 //pthread_mutex_t mutex_cash = PTHREAD_MUTEX_INITIALIZER;
 
 class Client {
-
-    static pthread_mutex_t mutex_distr1;
-    static pthread_mutex_t mutex_distr2;
-    static pthread_mutex_t mutex_distr3;
 
     static pthread_mutex_t mutex_cash;
 
@@ -31,6 +28,7 @@ class Client {
 
 public:
 
+    Station *station;
     static pthread_mutex_t mutex_fuel;
     static pthread_cond_t empty;
 
@@ -44,7 +42,7 @@ public:
 
     static int cnt;
 
-    Client(char color, unsigned fuel_tank, place position);
+    Client(char color, unsigned fuel_tank, place position, Station *station);
     void init();
     static void* thread_tank(void *obj);
     void tank(Client *client);

@@ -4,6 +4,7 @@
 #include <ctime>
 
 #include "src/Station.h"
+#include "src/Client.h"
 
 
 using namespace std;
@@ -17,7 +18,7 @@ int main() {
     //initscr();
     Station station;
 
-    getch();
+    //getch();
 
     //endwin();
 
